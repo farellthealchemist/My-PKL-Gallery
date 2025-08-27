@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Lock, User, Eye, EyeOff, ArrowRight, ArrowLeft } from "lucide-react";
+import { Lock, User, Eye, EyeOff, ArrowRight, ArrowLeft, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const LoginPage = () => {
@@ -9,21 +9,44 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  // Kredensial admin yang sudah ditentukan
+  const ADMIN_CREDENTIALS = {
+    username: "admin",
+    password: "pkl2024"
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError("");
 
     // Simulate login process
     setTimeout(() => {
-      // Demo credentials - any username/password will work
-      if (username && password) {
+      // Verifikasi kredensial yang benar
+      if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
         localStorage.setItem("pkl-admin-logged-in", "true");
         navigate("/admin/dashboard");
+      } else {
+        setError("Username atau password salah!");
       }
       setIsLoading(false);
     }, 1500);
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    if (field === "username") {
+      setUsername(value);
+    } else if (field === "password") {
+      setPassword(value);
+    }
+    
+    // Clear error when user starts typing
+    if (error) {
+      setError("");
+    }
   };
 
   return (
@@ -67,18 +90,20 @@ const LoginPage = () => {
             </p>
           </div>
 
-          {/* Demo Notice */}
+          {/* Credentials Info */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-6"
           >
-            <div className="text-sm text-primary">
-              <p className="font-medium mb-1">🚀 Mode Demo</p>
-              <p className="text-primary/80">
-                Gunakan username dan password apa saja untuk masuk ke dashboard demo.
-              </p>
+            <div className="flex items-start space-x-3">
+              <AlertCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+              <div className="text-sm">
+                <p className="font-medium text-primary mb-1">Kredensial Admin:</p>
+                <p className="text-primary/80">Username: <code className="bg-primary/10 px-1 py-0.5 rounded">admin</code></p>
+                <p className="text-primary/80">Password: <code className="bg-primary/10 px-1 py-0.5 rounded">pkl2024</code></p>
+              </div>
             </div>
           </motion.div>
 
@@ -98,7 +123,7 @@ const LoginPage = () => {
                 <input
                   type="text"
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChange={(e) => handleInputChange("username", e.target.value)}
                   className="w-full pl-10 pr-4 py-3 bg-card border border-card-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/30 focus:outline-none transition-all text-foreground placeholder:text-muted-foreground"
                   placeholder="Masukkan username"
                   required
@@ -120,7 +145,7 @@ const LoginPage = () => {
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => handleInputChange("password", e.target.value)}
                   className="w-full pl-10 pr-12 py-3 bg-card border border-card-border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary/30 focus:outline-none transition-all text-foreground placeholder:text-muted-foreground"
                   placeholder="Masukkan password"
                   required
@@ -139,6 +164,18 @@ const LoginPage = () => {
               </div>
             </motion.div>
 
+            {/* Error Message */}
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-destructive/10 border border-destructive/20 text-destructive rounded-lg p-3 text-sm flex items-center space-x-2"
+              >
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <span>{error}</span>
+              </motion.div>
+            )}
+
             {/* Login Button */}
             <motion.button
               initial={{ opacity: 0, y: 20 }}
@@ -151,7 +188,7 @@ const LoginPage = () => {
               {isLoading ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                  <span>Memproses...</span>
+                  <span>Memverifikasi...</span>
                 </>
               ) : (
                 <>
@@ -159,7 +196,7 @@ const LoginPage = () => {
                   <ArrowRight className="w-5 h-5" />
                 </>
               )}
-            </motion.button>
+            </button>
           </form>
 
           {/* Footer Info */}
