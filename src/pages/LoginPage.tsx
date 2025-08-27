@@ -196,7 +196,7 @@ const LoginPage = () => {
                   <ArrowRight className="w-5 h-5" />
                 </>
               )}
-            </button>
+            </motion.button>
           </form>
 
           {/* Footer Info */}
