@@ -14,8 +14,8 @@ const LoginPage = () => {
 
   // Kredensial admin yang sudah ditentukan
   const ADMIN_CREDENTIALS = {
-    username: "admin",
-    password: "pkl2024"
+    username: "adminFarell",
+    password: "pkl2025"
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -89,23 +89,6 @@ const LoginPage = () => {
               Masuk untuk mengakses dashboard admin
             </p>
           </div>
-
-          {/* Credentials Info */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-6"
-          >
-            <div className="flex items-start space-x-3">
-              <AlertCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-              <div className="text-sm">
-                <p className="font-medium text-primary mb-1">Kredensial Admin:</p>
-                <p className="text-primary/80">Username: <code className="bg-primary/10 px-1 py-0.5 rounded">admin</code></p>
-                <p className="text-primary/80">Password: <code className="bg-primary/10 px-1 py-0.5 rounded">pkl2024</code></p>
-              </div>
-            </div>
-          </motion.div>
 
           {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-6">
